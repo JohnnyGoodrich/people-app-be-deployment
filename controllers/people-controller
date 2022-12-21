@@ -1,0 +1,78 @@
+///////////////////////////////
+// DEPENDENCIES
+////////////////////////////////
+
+const express = require('express')
+const router = express.Router()
+const {People} = require('../models')
+const db = require('../models')
+console.log(People)
+
+///////////////////////////////
+// ROUTES
+////////////////////////////////
+
+// PEOPLE INDEX ROUTE
+router.get("/", async (req, res) => {
+	try {
+    // get all people
+    res.json(await People.find({}));
+  } catch (error) {
+    //send error
+    res.status(400).json(error);
+  }
+});
+
+// PEOPLE CREATE ROUTE
+router.post("/", async (req, res) => {
+  try {
+    // create new person
+    res.json(await People.create(req.body));
+  } catch (error) {
+    //send error
+    res.status(400).json(error);
+  }
+});
+
+// PEOPLE SHOW ROUTE
+router.get("/:id", async (req, res) => {
+    try {
+        // send one person
+        res.json(await People.findById(req.params.id));
+      } catch (error) {
+        //send error
+        res.status(400).json(error);
+      }
+});
+
+// PEOPLE DELETE ROUTE
+router.delete("/:id", async (req, res) => {
+    // console.log("current request type:", req.method)
+	// res.status(203).json({message: "people delete route: " + req.params.id })
+    try {
+  
+        const deletedPerson = await People.findByIdAndDelete(req.params.id);
+        res.status(200).json(deletedPerson)
+      } catch (error) {
+        //send error
+        res.status(400).json(error);
+      }
+});
+
+// PEOPLE UPDATE ROUTE
+router.put("/:id", async (req, res) => {
+	// console.log(req.body)
+	// res.status(204).json({message: "people update route: " + req.params.id })
+    try {
+    
+        const updatedPerson =await People.findByIdAndUpdate(req.params.id, req.body, {new:true});
+        res.status(200).json(updatedPerson)
+    } catch (error) {
+        //send error
+        res.status(400).json(error);
+      }
+});
+
+module.exports = router
+
+    
